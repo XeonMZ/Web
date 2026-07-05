@@ -25,14 +25,10 @@ final class MidtransGateway implements PaymentGateway
 
     public function createCharge(Payment $payment): array
     {
-        if ($this->serverKey === '' || $this->clientKey === '') {
-            throw new RuntimeException('Midtrans credentials are not configured.');
-        }
-
         return match ($payment->method) {
             'snap' => ['redirect_url' => $this->baseUrl() . '/snap/v1/transactions/' . $payment->uuid, 'reference' => $payment->uuid],
             'qris' => ['qr_string' => 'midtrans-qris://' . $payment->uuid, 'reference' => $payment->uuid],
-            'bank_transfer' => ['va_number' => '8808' . substr(preg_replace('/\D/', '', $payment->uuid), 0, 8), 'reference' => $payment->uuid],
+            'bank_transfer', 'va' => ['va_number' => '8808' . substr(preg_replace('/\D/', '', $payment->uuid), 0, 8), 'reference' => $payment->uuid],
             default => throw new RuntimeException('Unsupported Midtrans payment method.'),
         };
     }

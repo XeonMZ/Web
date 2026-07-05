@@ -27,4 +27,6 @@ final class Trip extends Model
     public function route(): BelongsTo { return $this->belongsTo(Route::class); }
 
     public function schedule(): BelongsTo { return $this->belongsTo(Schedule::class); }
+
+    public function tickets(): HasMany { return $this->hasMany(Ticket::class); }
 }

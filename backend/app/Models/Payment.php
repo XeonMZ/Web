@@ -18,7 +18,7 @@ final class Payment extends Model
 
     protected $guarded = ['id'];
     protected $hidden = ['deleted_at'];
-    protected $casts = ['metadata'=>'array','settings'=>'array','value'=>'array','starts_at'=>'datetime','ends_at'=>'datetime','departure_at'=>'datetime','arrival_at'=>'datetime','is_active'=>'boolean','enabled'=>'boolean','amount'=>'decimal:2','base_fare'=>'decimal:2'];
+    protected $casts = ['metadata'=>'array','settings'=>'array','value'=>'array','starts_at'=>'datetime','ends_at'=>'datetime','departure_at'=>'datetime','arrival_at'=>'datetime','is_active'=>'boolean','enabled'=>'boolean','amount'=>'decimal:2','base_fare'=>'decimal:2','gateway_payload'=>'array','expires_at'=>'datetime','paid_at'=>'datetime','failed_at'=>'datetime'];
 
     public function booking(): BelongsTo { return $this->belongsTo(Booking::class); }
 }

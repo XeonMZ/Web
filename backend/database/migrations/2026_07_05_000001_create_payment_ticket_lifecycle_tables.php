@@ -7,19 +7,6 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('payment_attempts', function (Blueprint $table): void {
-            $table->id();
-            $table->uuid('uuid')->unique();
-            $table->uuid('booking_uuid');
-            $table->unsignedBigInteger('amount');
-            $table->string('method');
-            $table->string('status')->default('pending');
-            $table->string('idempotency_key')->unique();
-            $table->string('gateway_reference')->nullable()->unique();
-            $table->json('gateway_payload')->nullable();
-            $table->timestamps();
-        });
-
         Schema::create('payment_webhook_logs', function (Blueprint $table): void {
             $table->id();
             $table->string('gateway_reference')->unique();
@@ -60,6 +47,5 @@ return new class extends Migration {
         Schema::dropIfExists('passenger_check_ins');
         Schema::dropIfExists('ticket_qr_codes');
         Schema::dropIfExists('payment_webhook_logs');
-        Schema::dropIfExists('payment_attempts');
     }
 };
