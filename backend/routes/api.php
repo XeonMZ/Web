@@ -32,9 +32,14 @@ Route::middleware(['auth:sanctum', 'active', 'maintenance'])->group(function ():
 
 Route::prefix('v1')->group(function (): void {
     Route::post('payments', [\App\Modules\Payments\Presentation\PaymentController::class, 'store']);
+    Route::get('payments/{payment}', [\App\Modules\Payments\Presentation\PaymentController::class, 'show']);
     Route::post('payments/webhook', [\App\Modules\Payments\Presentation\PaymentController::class, 'webhook']);
     Route::get('tickets', [\App\Modules\Tickets\Presentation\TicketController::class, 'index']);
     Route::get('tickets/{ticket}', [\App\Modules\Tickets\Presentation\TicketController::class, 'show']);
+    Route::get('tickets/{ticket}/qr', [\App\Modules\Tickets\Presentation\TicketController::class, 'qr']);
+    Route::post('tickets/verify', [\App\Modules\Tickets\Presentation\TicketController::class, 'verify']);
     Route::post('check-in', [\App\Modules\CheckIn\Presentation\CheckInController::class, 'store']);
     Route::post('check-in/no-show', [\App\Modules\CheckIn\Presentation\CheckInController::class, 'noShow']);
+    Route::post('check-in/board', [\App\Modules\CheckIn\Presentation\CheckInController::class, 'board']);
+    Route::get('trips/{trip}/passengers', [\App\Modules\CheckIn\Presentation\CheckInController::class, 'tripPassengers']);
 });

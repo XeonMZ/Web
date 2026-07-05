@@ -20,6 +20,8 @@ final class InMemoryPaymentRepository implements PaymentRepository
         }
         return null;
     }
+    public function dueExpiring(int $minutes): array { return array_values($this->payments); }
+    public function expiredPending(): array { return array_values($this->payments); }
     public function hasProcessedWebhook(string $gatewayReference): bool { return isset($this->webhooks[$gatewayReference]); }
     public function save(Payment $payment): Payment { $this->payments[$payment->uuid] = $payment; return $payment; }
     public function markWebhookProcessed(string $gatewayReference, array $payload): void { $this->webhooks[$gatewayReference] = $payload; }

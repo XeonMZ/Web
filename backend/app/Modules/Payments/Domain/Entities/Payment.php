@@ -3,9 +3,11 @@
 namespace App\Modules\Payments\Domain\Entities;
 
 use App\Modules\Payments\Domain\ValueObjects\PaymentStatus;
+use DateTimeInterface;
 
 final class Payment
 {
+    /** @param array<string, mixed> $gatewayPayload */
     public function __construct(
         public readonly string $uuid,
         public readonly string $bookingUuid,
@@ -14,5 +16,9 @@ final class Payment
         public readonly PaymentStatus $status,
         public readonly string $idempotencyKey,
         public readonly ?string $gatewayReference = null,
+        public readonly null|string|DateTimeInterface $expiresAt = null,
+        public readonly null|string|DateTimeInterface $paidAt = null,
+        public readonly null|string|DateTimeInterface $failedAt = null,
+        public readonly array $gatewayPayload = [],
     ) {}
 }
