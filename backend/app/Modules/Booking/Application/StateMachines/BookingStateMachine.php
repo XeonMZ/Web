@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Booking\Application\StateMachines;
 
 use App\Modules\Booking\Domain\ValueObjects\BookingStatus;
@@ -11,8 +13,9 @@ final class BookingStateMachine
         'draft' => ['seat_locked', 'cancelled', 'expired'],
         'seat_locked' => ['waiting_payment', 'cancelled', 'expired'],
         'waiting_payment' => ['paid', 'cancelled', 'expired'],
-        'paid' => ['ticket_issued', 'refunded'],
-        'ticket_issued' => ['checked_in', 'cancelled'],
+        'paid' => ['ticket_generated', 'ticket_issued', 'refunded'],
+        'ticket_generated' => ['completed', 'cancelled'],
+        'ticket_issued' => ['checked_in', 'completed', 'cancelled'],
         'checked_in' => ['completed'],
         'completed' => [],
         'cancelled' => [],

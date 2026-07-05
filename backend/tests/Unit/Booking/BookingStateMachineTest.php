@@ -12,6 +12,12 @@ final class BookingStateMachineTest extends TestCase
         self::assertSame(BookingStatus::Paid, $machine->transition(BookingStatus::WaitingPayment, BookingStatus::Paid));
     }
 
+    public function test_paid_can_generate_ticket(): void
+    {
+        $machine = new BookingStateMachine();
+        self::assertSame(BookingStatus::TicketGenerated, $machine->transition(BookingStatus::Paid, BookingStatus::TicketGenerated));
+    }
+
     public function test_draft_cannot_be_completed(): void
     {
         $this->expectException(DomainException::class);
