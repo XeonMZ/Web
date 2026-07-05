@@ -1,0 +1,3 @@
+import { ConnectionIndicator, OfflineBanner } from '@/shared/components';
+const stats = [['Active Trips', '0'], ['Online Drivers', '0'], ['Notifications', '0']];
+export default function OwnerFleetPage() { return <main className="min-h-screen bg-secondary p-6 text-slate-950"><OfflineBanner/><section className="mx-auto max-w-6xl"><ConnectionIndicator/><h1 className="mt-6 font-display text-4xl font-bold">Fleet Overview</h1><div className="mt-8 grid gap-4 md:grid-cols-3">{stats.map(([label, value]) => <div key={label} className="rounded-[2rem] bg-white p-6 text-center shadow-soft"><p className="font-display text-4xl font-bold text-primary">{value}</p><p className="mt-2 text-sm font-semibold text-slate-500">{label}</p></div>)}</div></section></main>; }
