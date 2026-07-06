@@ -172,3 +172,52 @@ New pages are prepared for customer live tracking, driver dashboard GPS actions,
 ### Testing
 
 Feature, unit, and broadcast test scaffolds are added for realtime routes, GPS service availability, and broadcast event availability.
+
+## Sprint 6B — Customer Portal
+
+Customer Portal is implemented as a UI and integration layer on top of the existing backend engines. It does not introduce a second booking, payment, ticket, notification, realtime, or state-machine implementation.
+
+### Flow
+
+1. Customers review dashboard summaries for upcoming trips, active bookings, waiting payments, active tickets, membership, promos, vouchers, notification previews, last trips, quick actions, and booking progress.
+2. Booking screens link to the existing booking APIs for customer bookings, booking detail, seat, passenger, invoice, cancel booking, timeline, and history.
+3. Payment screens present waiting, success, failed, expired, retry, countdown, polling, and history states using the existing PaymentService and Midtrans integration.
+4. Ticket screens present customer tickets, ticket detail, QR ticket, PDF download, check-in status, boarding status, and trip detail using the existing TicketService.
+5. Profile, membership, promo, trip history, and notification center screens use the shared Sprint 6A responsive design system with dark-mode compatible components.
+
+### UI
+
+Customer pages live under `/customer` and use the Sprint 6A app shell, role navigation, cards, badges, tables, filters, timeline, skeleton, empty state, error state, and confirmation dialog foundations.
+
+Implemented pages:
+
+- `/customer`
+- `/customer/bookings`
+- `/customer/bookings/[id]`
+- `/customer/payment`
+- `/customer/tickets`
+- `/customer/tickets/[id]`
+- `/customer/profile`
+- `/customer/membership`
+- `/customer/promo`
+- `/customer/promo/[id]`
+- `/customer/trip-history`
+- `/customer/notifications`
+- `/customer/tracking`
+
+### Existing Endpoints Used
+
+- `GET /customer/bookings`
+- `GET /booking/{id}`
+- `POST /booking/cancel`
+- `GET /v1/payments/{payment}`
+- `GET /v1/tickets`
+- `GET /v1/tickets/{ticket}`
+- `GET /v1/tickets/{ticket}/qr`
+- `GET /profile`
+- `PUT /profile`
+- `PUT /change-password`
+
+### Duplicate Audit Result
+
+Sprint 6B adds only frontend portal UI and typed integration helpers. No new backend model, repository, service, controller, event, queue job, route, middleware, provider, config, migration, or state machine was added for Customer Portal.

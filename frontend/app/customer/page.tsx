@@ -1,17 +1,14 @@
-import { AppCard, DataTable, PageHeader, StatsCard } from '@/shared/ui/components';
+import { AppCard, PageHeader, SectionHeader } from '@/shared/ui/components';
+import { BookingCard, CustomerTimeline, MembershipCardPortal, PaymentCard, PortalFeatureGrid, PromoCard, QuickActions, StatisticCard, TicketCardPortal } from '@/features/customer-portal/components';
+import { bookingCards, dashboardMetrics, paymentCards, promoCards, ticketCards, timelineItems } from '@/features/customer-portal/data';
 
 export default function Page() {
-  return (
-    <div className="space-y-6">
-      <PageHeader title="Customer Dashboard" description="Customer self-service workspace using the shared STMS UI foundation." />
-      <div className="grid gap-4 md:grid-cols-3">
-        <StatsCard label="Active" value="--" helper="Connected to existing flows" />
-        <StatsCard label="Pending" value="--" helper="Ready for Sprint integration" />
-        <StatsCard label="Alerts" value="--" helper="Realtime UI enabled" />
-      </div>
-      <AppCard>
-        <DataTable columns={['Area', 'Status']} rows={[['Shared layout', 'Active'], ['Role navigation', 'Configured'], ['Business logic', 'Unchanged']]} />
-      </AppCard>
-    </div>
-  );
+  return <div className="space-y-6"><PageHeader title="Customer Dashboard" description="Portal pelanggan responsive, PWA ready, dark mode, dan hanya mengintegrasikan engine backend yang sudah ada." />
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">{dashboardMetrics.map((metric) => <StatisticCard key={metric.label} metric={metric} />)}</div>
+    <QuickActions />
+    <div className="grid gap-4 xl:grid-cols-3"><BookingCard card={bookingCards[0]} /><PaymentCard card={paymentCards[0]} /><TicketCardPortal card={ticketCards[0]} /></div>
+    <div className="grid gap-4 xl:grid-cols-2"><MembershipCardPortal card={{ id: 'MBR', title: 'Gold Membership', description: 'Level, points, benefits, point history, and upgrade progress.', status: 'active', meta: '78% to Platinum', href: '/customer/membership' }} /><PromoCard card={promoCards[0]} /></div>
+    <AppCard><SectionHeader title="Booking Progress" description="Progress follows existing booking, payment, ticket, check-in, and boarding state machines." /><div className="mt-4"><CustomerTimeline items={timelineItems} /></div></AppCard>
+    <PortalFeatureGrid />
+  </div>;
 }
