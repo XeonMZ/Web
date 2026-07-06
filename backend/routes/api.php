@@ -43,3 +43,18 @@ Route::prefix('v1')->group(function (): void {
     Route::post('check-in/board', [\App\Modules\CheckIn\Presentation\CheckInController::class, 'board']);
     Route::get('trips/{trip}/passengers', [\App\Modules\CheckIn\Presentation\CheckInController::class, 'tripPassengers']);
 });
+
+Route::prefix('v1')->middleware(['auth:sanctum', 'active', 'maintenance'])->group(function (): void {
+    Route::get('driver/dashboard', [\App\Modules\Drivers\Presentation\DriverController::class, 'dashboard']);
+    Route::get('driver/trips', [\App\Modules\Drivers\Presentation\DriverController::class, 'trips']);
+    Route::get('driver/history', [\App\Modules\Drivers\Presentation\DriverController::class, 'history']);
+    Route::get('driver/earnings', [\App\Modules\Drivers\Presentation\DriverController::class, 'earnings']);
+    Route::get('driver/timeline', [\App\Modules\Drivers\Presentation\DriverController::class, 'timeline']);
+    Route::post('driver/start-shift', [\App\Modules\Drivers\Presentation\DriverController::class, 'startShift']);
+    Route::post('driver/end-shift', [\App\Modules\Drivers\Presentation\DriverController::class, 'endShift']);
+    Route::post('driver/start-trip', [\App\Modules\Drivers\Presentation\DriverController::class, 'startTrip']);
+    Route::post('driver/finish-trip', [\App\Modules\Drivers\Presentation\DriverController::class, 'finishTrip']);
+    Route::post('driver/location', [\App\Modules\Drivers\Presentation\DriverController::class, 'location']);
+    Route::post('driver/break', [\App\Modules\Drivers\Presentation\DriverController::class, 'break']);
+    Route::post('driver/resume', [\App\Modules\Drivers\Presentation\DriverController::class, 'resume']);
+});
