@@ -1,11 +1,17 @@
+import { AppCard, DataTable, PageHeader, StatsCard } from '@/shared/ui/components';
+
 export default function Page() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-secondary px-4">
-      <section className="max-w-xl rounded-[2rem] bg-white p-10 text-center shadow-soft">
-        <p className="text-sm font-bold uppercase tracking-[0.3em] text-primary">STMS</p>
-        <h1 className="mt-4 font-display text-4xl font-bold text-slate-950">Admin</h1>
-        <p className="mt-4 text-slate-600">This route is reserved for the next STMS implementation sprint.</p>
-      </section>
-    </main>
+    <div className="space-y-6">
+      <PageHeader title="Operation Dashboard" description="Admin operations workspace using the shared STMS UI foundation." />
+      <div className="grid gap-4 md:grid-cols-3">
+        <StatsCard label="Active" value="--" helper="Connected to existing flows" />
+        <StatsCard label="Pending" value="--" helper="Ready for Sprint integration" />
+        <StatsCard label="Alerts" value="--" helper="Realtime UI enabled" />
+      </div>
+      <AppCard>
+        <DataTable columns={['Area', 'Status']} rows={[['Shared layout', 'Active'], ['Role navigation', 'Configured'], ['Business logic', 'Unchanged']]} />
+      </AppCard>
+    </div>
   );
 }

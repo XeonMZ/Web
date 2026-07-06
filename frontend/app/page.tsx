@@ -1,8 +1,7 @@
 import { Button } from '@/components/button';
 import { SectionHeading } from '@/components/section-heading';
-import { ArrowRight, CalendarDays, Car, CheckCircle2, MapPin, ShieldCheck, Sparkles, Users, type LucideIcon } from 'lucide-react';
+import { ArrowRight, CalendarDays, Car, MapPin, ShieldCheck, Sparkles, Users, type LucideIcon } from 'lucide-react';
 
-const nav = ['Booking', 'Solutions', 'FAQ'];
 const stats: Array<[string, string]> = [ ['12k+', 'Trips managed'], ['98%', 'On-time arrivals'], ['24/7', 'Operations support'], ['4.9/5', 'Customer rating'] ];
 const benefits: Array<[string, string, LucideIcon]> = [
   ['Smart dispatch', 'Match every booking with the right driver, vehicle, and route in seconds.', Car],
@@ -17,17 +16,7 @@ const faqs: Array<[string, string]> = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-secondary text-slate-950">
-      <nav className="fixed left-0 right-0 top-0 z-50 px-4 py-4">
-        <div className="glass-panel mx-auto flex max-w-7xl items-center justify-between rounded-2xl px-5 py-3 shadow-soft">
-          <a href="/" className="font-display text-xl font-bold tracking-tight">SJT<span className="text-primary">.</span>Travel</a>
-          <div className="hidden items-center gap-8 text-sm font-semibold text-slate-700 md:flex">
-            {nav.map((item) => <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-primary">{item}</a>)}
-          </div>
-          <a href="/login" className="rounded-2xl bg-slate-950 px-5 py-2.5 text-sm font-bold text-white">Sign in</a>
-        </div>
-      </nav>
-
+    <div className="overflow-hidden bg-secondary text-slate-950 dark:bg-slate-950 dark:text-slate-100">
       <section className="relative px-4 pb-20 pt-36 sm:pt-44">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.22),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(22,163,74,0.16),transparent_26%)]" />
         <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
@@ -58,7 +47,6 @@ export default function Home() {
 
       <section className="px-4 pb-20"><div className="mx-auto rounded-[2rem] bg-slate-950 p-10 text-center text-white shadow-soft"><Users className="mx-auto text-warning" size={36} /><h2 className="mt-5 font-display text-4xl font-bold">Launch your travel operations hub.</h2><p className="mx-auto mt-4 max-w-2xl text-slate-300">Start with a polished customer experience today and scale into role-based operations tomorrow.</p><a href="/register" className="mt-8 inline-flex rounded-2xl bg-white px-6 py-3 font-bold text-slate-950">Create account</a></div></section>
 
-      <footer className="border-t border-slate-200 px-4 py-10"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 text-sm text-slate-500 md:flex-row"><p>© 2026 SJT Travel Management System.</p><p className="flex items-center gap-2"><CheckCircle2 size={16} className="text-success" /> Production-ready foundation</p></div></footer>
-    </main>
+    </div>
   );
 }

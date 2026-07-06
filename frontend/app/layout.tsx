@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Poppins } from 'next/font/google';
 import { AppProviders } from '@/lib/query-client';
+import { AppShell } from '@/shared/ui/layout/app-shell';
 import '@/styles/globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -24,7 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={`${inter.variable} ${poppins.variable} font-sans antialiased`}>
-        <AppProviders>{children}</AppProviders>
+        <AppProviders><AppShell>{children}</AppShell></AppProviders>
       </body>
     </html>
   );
