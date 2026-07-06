@@ -10,7 +10,7 @@ use App\Models\Booking;
 use App\Models\Ticket as TicketModel;
 use App\Modules\Booking\Domain\ValueObjects\BookingStatus;
 use App\Modules\Tickets\Application\StateMachines\TicketStateMachine;
-use App\Modules\Tickets\Domain\Entities\Ticket;
+use App\Modules\Tickets\Domain\Entities\TicketRecord;
 use App\Modules\Tickets\Domain\Repositories\TicketRepository;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -25,7 +25,7 @@ final class TicketService
         private readonly TicketStateMachine $states,
     ) {}
 
-    public function generate(string $bookingUuid, string $tripUuid = '', string $passengerUuid = ''): Ticket
+    public function generate(string $bookingUuid, string $tripUuid = '', string $passengerUuid = ''): TicketRecord
     {
         $booking = Booking::with(['passengers', 'schedule.trip'])->where('uuid', $bookingUuid)->firstOrFail();
         if (! in_array($booking->status, [BookingStatus::Paid->value, BookingStatus::TicketGenerated->value], true)) throw new RuntimeException('Booking belum siap dibuatkan ticket.');
@@ -45,7 +45,7 @@ final class TicketService
         return $this->toEntity($model);
     }
 
-    public function validatePayload(string $payload): Ticket
+    public function validatePayload(string $payload): TicketRecord
     {
         $decoded = $this->qrCodes->decodeAndVerify($payload);
         $ticket = TicketModel::with(['booking', 'trip', 'passenger'])->where('uuid', $decoded['ticket_uuid'])->where('verification_token', $decoded['verification_token'])->first();
@@ -72,8 +72,8 @@ final class TicketService
         return $this->storage->storePdf($ticketUuid, $this->pdfs->render($ticket));
     }
 
-    private function toEntity(TicketModel $ticket): Ticket
+    private function toEntity(TicketModel $ticket): TicketRecord
     {
-        return new Ticket($ticket->uuid, $ticket->booking?->uuid ?? '', $ticket->trip?->uuid ?? '', $ticket->passenger?->uuid ?? '', $ticket->ticket_number, $ticket->qr_code, $ticket->qr_path ?? '', in_array($ticket->status, ['checked_in','boarded','completed'], true));
+        return new TicketRecord($ticket->uuid, $ticket->booking?->uuid ?? '', $ticket->trip?->uuid ?? '', $ticket->passenger?->uuid ?? '', $ticket->ticket_number, $ticket->qr_code, $ticket->qr_path ?? '', in_array($ticket->status, ['checked_in','boarded','completed'], true));
     }
 }

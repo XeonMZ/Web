@@ -7,7 +7,7 @@ use App\Jobs\PaymentReminderJob;
 use App\Models\ActivityLog;
 use App\Models\Booking;
 use App\Modules\Booking\Domain\ValueObjects\BookingStatus;
-use App\Modules\Payments\Domain\Entities\Payment;
+use App\Modules\Payments\Domain\Entities\PaymentRecord;
 use App\Modules\Payments\Domain\Repositories\PaymentGateway;
 use App\Modules\Payments\Domain\Repositories\PaymentRepository;
 use App\Modules\Payments\Domain\ValueObjects\PaymentStatus;
@@ -24,7 +24,7 @@ final class PaymentService
         private readonly DatabaseManager $db,
     ) {}
 
-    /** @return array{payment: Payment, gateway: array<string, mixed>} */
+    /** @return array{payment: PaymentRecord, gateway: array<string, mixed>} */
     public function createPayment(string $bookingUuid, int $amount, string $method, string $idempotencyKey): array
     {
         return $this->db->transaction(function () use ($bookingUuid, $amount, $method, $idempotencyKey): array {
@@ -37,9 +37,9 @@ final class PaymentService
             $this->validator->validateCreate($booking, $method, $amount);
             $expiresAt = now()->addMinutes((int) config('payment.expiry_minutes', 15));
             $normalizedMethod = $method === 'va' ? 'bank_transfer' : $method;
-            $payment = new Payment((string) Str::uuid(), $bookingUuid, $amount, $normalizedMethod, PaymentStatus::Pending, $idempotencyKey, null, $expiresAt);
+            $payment = new PaymentRecord((string) Str::uuid(), $bookingUuid, $amount, $normalizedMethod, PaymentStatus::Pending, $idempotencyKey, null, $expiresAt);
             $gatewayPayload = $this->gateway->createCharge($payment);
-            $payment = new Payment($payment->uuid, $bookingUuid, $amount, $normalizedMethod, PaymentStatus::Pending, $idempotencyKey, $gatewayPayload['reference'] ?? $payment->uuid, $expiresAt, null, null, $gatewayPayload);
+            $payment = new PaymentRecord($payment->uuid, $bookingUuid, $amount, $normalizedMethod, PaymentStatus::Pending, $idempotencyKey, $gatewayPayload['reference'] ?? $payment->uuid, $expiresAt, null, null, $gatewayPayload);
             $saved = $this->payments->save($payment);
             $booking->update(['status' => BookingStatus::WaitingPayment->value, 'expires_at' => $expiresAt]);
             $booking->seatReservations()->where('status', 'locked')->update(['status' => 'waiting_payment', 'locked_until' => $expiresAt]);
@@ -50,7 +50,7 @@ final class PaymentService
         });
     }
 
-    public function expire(string $paymentUuid): ?Payment
+    public function expire(string $paymentUuid): ?PaymentRecord
     {
         $payment = $this->payments->findByUuid($paymentUuid);
         if ($payment === null || $payment->status !== PaymentStatus::Pending) return $payment;

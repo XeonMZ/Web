@@ -5,7 +5,7 @@ namespace App\Modules\Payments\Domain\Entities;
 use App\Modules\Payments\Domain\ValueObjects\PaymentStatus;
 use DateTimeInterface;
 
-final class Payment
+final class PaymentRecord
 {
     /** @param array<string, mixed> $gatewayPayload */
     public function __construct(

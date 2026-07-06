@@ -2,7 +2,7 @@
 
 namespace App\Modules\Realtime\Application;
 
-use App\Support\FeatureFlags\FeatureFlag;
+use App\Support\FeatureFlags\FeatureFlagDefinition;
 use App\Support\FeatureFlags\FeatureFlagService;
 
 final class RealtimeService
@@ -11,16 +11,16 @@ final class RealtimeService
 
     public function canBroadcast(): bool
     {
-        return $this->features->enabled(FeatureFlag::Realtime);
+        return $this->features->enabled(FeatureFlagDefinition::Realtime);
     }
 
     public function canBroadcastGps(): bool
     {
-        return $this->canBroadcast() && $this->features->enabled(FeatureFlag::Gps);
+        return $this->canBroadcast() && $this->features->enabled(FeatureFlagDefinition::Gps);
     }
 
     public function canBroadcastNotifications(): bool
     {
-        return $this->canBroadcast() && $this->features->enabled(FeatureFlag::Notifications);
+        return $this->canBroadcast() && $this->features->enabled(FeatureFlagDefinition::Notifications);
     }
 }
