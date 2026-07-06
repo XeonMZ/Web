@@ -1,7 +1,7 @@
 <?php
 
 use App\Modules\Tickets\Application\Services\TicketService;
-use App\Modules\Tickets\Infrastructure\Repositories\InMemoryTicketRepository;
+use Tests\Support\InMemoryTicketRepository;
 use App\Modules\Tickets\Infrastructure\Storage\LocalTicketStorage;
 use PHPUnit\Framework\TestCase;
 

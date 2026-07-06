@@ -2,7 +2,7 @@
 
 namespace App\Modules\Payments\Infrastructure\Gateways;
 
-use App\Modules\Payments\Domain\Entities\Payment;
+use App\Modules\Payments\Domain\Entities\PaymentRecord;
 use App\Modules\Payments\Domain\Repositories\PaymentGateway;
 use RuntimeException;
 
@@ -23,7 +23,7 @@ final class MidtransGateway implements PaymentGateway
         );
     }
 
-    public function createCharge(Payment $payment): array
+    public function createCharge(PaymentRecord $payment): array
     {
         return match ($payment->method) {
             'snap' => ['redirect_url' => $this->baseUrl() . '/snap/v1/transactions/' . $payment->uuid, 'reference' => $payment->uuid],

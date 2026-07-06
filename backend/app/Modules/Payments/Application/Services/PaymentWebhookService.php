@@ -7,7 +7,7 @@ use App\Models\ActivityLog;
 use App\Models\Booking;
 use App\Modules\Booking\Application\Services\BookingService;
 use App\Modules\Payments\Application\StateMachines\PaymentStateMachine;
-use App\Modules\Payments\Domain\Entities\Payment;
+use App\Modules\Payments\Domain\Entities\PaymentRecord;
 use App\Modules\Payments\Domain\Events\PaymentExpired;
 use App\Modules\Payments\Domain\Events\PaymentFailed;
 use App\Modules\Payments\Domain\Events\PaymentSucceeded;
@@ -26,7 +26,7 @@ final class PaymentWebhookService
     ) {}
 
     /** @param array<string, mixed> $payload */
-    public function handle(array $payload): Payment
+    public function handle(array $payload): PaymentRecord
     {
         $reference = (string) ($payload['order_id'] ?? '');
         if ($reference === '') throw new RuntimeException('Missing webhook order_id.');
@@ -43,11 +43,11 @@ final class PaymentWebhookService
     }
 
     /** @param array<string, mixed> $payload */
-    public function forceStatus(Payment $payment, PaymentStatus $next, array $payload = []): Payment
+    public function forceStatus(PaymentRecord $payment, PaymentStatus $next, array $payload = []): PaymentRecord
     {
         if ($payment->status === $next) return $payment;
         $this->states->assertCanTransition($payment->status, $next);
-        $updated = new Payment($payment->uuid, $payment->bookingUuid, $payment->amount, $payment->method, $next, $payment->idempotencyKey, $payment->gatewayReference, $payment->expiresAt, $next === PaymentStatus::Paid ? now() : $payment->paidAt, in_array($next, [PaymentStatus::Failed, PaymentStatus::Expired], true) ? now() : $payment->failedAt, $payment->gatewayPayload + ['last_webhook' => $payload]);
+        $updated = new PaymentRecord($payment->uuid, $payment->bookingUuid, $payment->amount, $payment->method, $next, $payment->idempotencyKey, $payment->gatewayReference, $payment->expiresAt, $next === PaymentStatus::Paid ? now() : $payment->paidAt, in_array($next, [PaymentStatus::Failed, PaymentStatus::Expired], true) ? now() : $payment->failedAt, $payment->gatewayPayload + ['last_webhook' => $payload]);
         $this->payments->save($updated);
         $booking = Booking::where('uuid', $payment->bookingUuid)->first();
         if ($booking) {

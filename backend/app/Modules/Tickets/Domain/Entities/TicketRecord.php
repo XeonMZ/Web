@@ -2,7 +2,7 @@
 
 namespace App\Modules\Tickets\Domain\Entities;
 
-final class Ticket
+final class TicketRecord
 {
     public function __construct(
         public readonly string $uuid,
