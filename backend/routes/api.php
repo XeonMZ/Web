@@ -17,6 +17,17 @@ Route::post('register', [\App\Modules\Auth\Presentation\AuthController::class, '
 Route::post('forgot-password', [\App\Modules\Auth\Presentation\AuthController::class, 'forgotPassword'])->middleware('throttle:password-reset');
 Route::post('reset-password', [\App\Modules\Auth\Presentation\AuthController::class, 'resetPassword'])->middleware('throttle:password-reset');
 
+
+Route::prefix('owner/production-readiness')->middleware(['auth:sanctum', 'active', 'maintenance', 'role:owner'])->group(function (): void {
+    Route::get('health', [\App\Http\Controllers\ProductionReadinessController::class, 'health']);
+    Route::get('demo-data', [\App\Http\Controllers\ProductionReadinessController::class, 'demoData']);
+    Route::delete('demo-data', [\App\Http\Controllers\ProductionReadinessController::class, 'deleteDemoData'])->middleware('throttle:6,1');
+    Route::get('configuration/export', [\App\Http\Controllers\ProductionReadinessController::class, 'export']);
+    Route::post('configuration/import', [\App\Http\Controllers\ProductionReadinessController::class, 'import'])->middleware('throttle:6,1');
+    Route::post('configuration/backup', [\App\Http\Controllers\ProductionReadinessController::class, 'backup'])->middleware('throttle:6,1');
+    Route::post('configuration/restore', [\App\Http\Controllers\ProductionReadinessController::class, 'restore'])->middleware('throttle:6,1');
+});
+
 Route::middleware(['auth:sanctum', 'active', 'maintenance'])->group(function (): void {
     Route::post('logout', [\App\Modules\Auth\Presentation\AuthController::class, 'logout']);
     Route::get('profile', [\App\Modules\Auth\Presentation\AuthController::class, 'profile'])->middleware('verified');

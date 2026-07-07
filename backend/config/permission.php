@@ -7,7 +7,7 @@ return [
     'permissions' => [
         'customer' => ['booking:create', 'ticket:read', 'history:read', 'tracking:read'],
         'driver' => ['trip:read', 'trip:update-status', 'gps:update', 'passenger:read'],
-        'admin' => ['operations:*', 'booking:*', 'ticket:*', 'route:*', 'vehicle:*', 'driver:*', 'schedule:*'],
-        'owner' => ['dashboard:read', 'analytics:read', 'operations:read'],
+        'admin' => ['operations:*', 'booking:*', 'ticket:*', 'route:*', 'vehicle:*', 'driver:*', 'schedule:*', 'payment:read', 'customer:read'],
+        'owner' => ['*'],
     ],
 ];

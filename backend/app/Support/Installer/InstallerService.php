@@ -42,21 +42,13 @@ final class InstallerService
             $owner = User::query()->create(['name' => data_get($payload, 'owner.name'), 'email' => data_get($payload, 'owner.email'), 'password' => Hash::make((string) data_get($payload, 'owner.password')), 'role' => 'owner', 'email_verified_at' => now(), 'metadata' => ['created_by' => 'installer']]);
             $admin = User::query()->create(['name' => data_get($payload, 'admin.name'), 'email' => data_get($payload, 'admin.email'), 'password' => Hash::make((string) data_get($payload, 'admin.password')), 'role' => 'admin', 'email_verified_at' => now(), 'metadata' => ['created_by' => 'installer']]);
 
-            foreach ([
-                'company.profile' => data_get($payload, 'company'),
-                'booking.seat_lock_minutes' => (int) data_get($payload, 'configuration.seat_lock_minutes', 10),
-                'ticket.expiry_minutes' => (int) data_get($payload, 'configuration.ticket_expiry_minutes', 30),
-                'payment.expiry_minutes' => (int) data_get($payload, 'configuration.payment_expiry_minutes', 15),
-                'app.timezone' => data_get($payload, 'configuration.timezone', data_get($payload, 'company.timezone', 'UTC')),
-                'app.language' => data_get($payload, 'configuration.language', 'en'),
-                'app.currency' => data_get($payload, 'configuration.currency', data_get($payload, 'company.currency', 'USD')),
-                'payment.midtrans' => data_get($payload, 'payment.midtrans'),
-                'mail.smtp' => data_get($payload, 'mail'),
-                'installer.completed_at' => now()->toISOString(),
-            ] as $key => $value) {
-                SystemSetting::query()->updateOrCreate(['key' => $key], ['value' => $value, 'is_public' => in_array($key, ['company.profile', 'app.timezone', 'app.language', 'app.currency'], true)]);
+            foreach ($this->bootstrapSettings($payload) as $key => $value) {
+                SystemSetting::query()->updateOrCreate(['key' => $key], ['value' => $value, 'is_public' => in_array($key, ['company.profile', 'company.name', 'company.logo', 'app.timezone', 'app.locale', 'app.currency', 'app.date_format', 'app.time_format'], true)]);
             }
 
+            foreach ($this->defaultFeatureFlags() as $key => $enabled) {
+                FeatureFlag::query()->updateOrCreate(['key' => $key], ['enabled' => $enabled, 'metadata' => ['source' => 'installer', 'production_default' => true]]);
+            }
             FeatureFlag::query()->updateOrCreate(['key' => 'installation_completed'], ['enabled' => true, 'metadata' => ['completed_at' => now()->toISOString()]]);
             $demo = (bool) data_get($payload, 'demo_data', false) ? $this->createDemoData() : [];
             if (blank(config('app.key'))) { Artisan::call('key:generate', ['--force' => true]); }
@@ -64,6 +56,56 @@ final class InstallerService
             ActivityLog::query()->create(['action' => 'installer.completed', 'subject_type' => User::class, 'subject_id' => $owner->id, 'metadata' => ['owner_uuid' => $owner->uuid, 'admin_uuid' => $admin->uuid, 'demo' => $demo]]);
             return ['owner_uuid' => $owner->uuid, 'admin_uuid' => $admin->uuid, 'demo' => $demo];
         });
+    }
+
+    private function bootstrapSettings(array $payload): array
+    {
+        $company = (array) data_get($payload, 'company', []);
+        return [
+            'company.profile' => $company,
+            'company.name' => data_get($company, 'name'),
+            'company.logo' => data_get($company, 'logo'),
+            'company.address' => data_get($company, 'address'),
+            'company.phone' => data_get($company, 'phone'),
+            'company.email' => data_get($company, 'email'),
+            'company.website' => data_get($company, 'website'),
+            'company.tax_number' => data_get($company, 'tax_number'),
+            'app.timezone' => data_get($payload, 'configuration.timezone', data_get($company, 'timezone', 'UTC')),
+            'app.currency' => data_get($payload, 'configuration.currency', data_get($company, 'currency', 'USD')),
+            'app.locale' => data_get($payload, 'configuration.locale', data_get($payload, 'configuration.language', 'en')),
+            'app.date_format' => data_get($payload, 'configuration.date_format', 'Y-m-d'),
+            'app.time_format' => data_get($payload, 'configuration.time_format', 'H:i'),
+            'booking.seat_lock_minutes' => (int) data_get($payload, 'configuration.seat_lock_minutes', 10),
+            'booking.expiry_minutes' => (int) data_get($payload, 'configuration.booking_expiry_minutes', 30),
+            'booking.cancellation_rules' => data_get($payload, 'configuration.cancellation_rules', ['allow_until_minutes_before_departure' => 60]),
+            'payment.midtrans' => data_get($payload, 'payment.midtrans'),
+            'payment.midtrans_mode' => data_get($payload, 'payment.midtrans.environment', 'sandbox'),
+            'payment.expiry_minutes' => (int) data_get($payload, 'configuration.payment_expiry_minutes', 15),
+            'payment.invoice_prefix' => data_get($payload, 'configuration.invoice_prefix', 'INV'),
+            'ticket.expiry_minutes' => (int) data_get($payload, 'configuration.ticket_expiry_minutes', 30),
+            'ticket.qr_expiry_minutes' => (int) data_get($payload, 'configuration.qr_expiry_minutes', 30),
+            'realtime.reverb_enabled' => filled(config('broadcasting.connections.reverb.key')),
+            'realtime.broadcast_enabled' => (bool) data_get($payload, 'configuration.broadcast_enabled', true),
+            'notification.center_enabled' => true,
+            'notification.email_placeholder' => data_get($payload, 'mail.sender_email'),
+            'notification.push_placeholder' => false,
+            'notification.sound_placeholder' => true,
+            'membership.enabled' => true,
+            'promo.enabled' => true,
+            'gps.enabled' => true,
+            'feature.flags' => $this->defaultFeatureFlags(),
+            'mail.smtp' => data_get($payload, 'mail'),
+            'installer.completed_at' => now()->toISOString(),
+        ];
+    }
+
+    private function defaultFeatureFlags(): array
+    {
+        return [
+            'booking' => true, 'payment' => true, 'ticket' => true, 'driver' => true, 'gps' => true,
+            'notification' => true, 'membership' => true, 'promo' => true, 'analytics' => true,
+            'reports' => true, 'realtime' => true, 'referral' => false, 'maintenance_mode' => false,
+        ];
     }
 
     private function databaseReady(): bool { try { DB::connection()->getPdo(); return true; } catch (\Throwable) { return false; } }
