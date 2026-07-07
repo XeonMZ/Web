@@ -1,5 +1,2 @@
-import { AppCard, DataTable, PageHeader, SectionHeader } from '@/shared/ui/components';
-
-export default function TripHistoryPage() {
-  return <div className="space-y-6"><PageHeader title="Trip History" description="Completed trip, cancelled trip, rating, review, receipt, and invoice." /><AppCard><SectionHeader title="History" /><div className="mt-4"><DataTable columns={['Trip', 'Status', 'Rating', 'Document']} rows={[[ 'Surabaya → Malang', 'Completed', '5/5 Review sent', 'Receipt & invoice' ], [ 'Jakarta → Bogor', 'Cancelled', '-', 'Refund receipt' ]]} /></div></AppCard></div>;
-}
+import { IntegratedResourcePage } from '@/shared/components/integrated-resource-page';
+export default function Page() { return <IntegratedResourcePage title="Trip History" description="Completed and historical bookings from the existing customer bookings endpoint." endpoint="/customer/bookings" queryKey="customer-history" currentRole="customer" allowedRoles={['customer','owner']} columns={[{key:'id',label:'Booking'},{key:'status',label:'Status'},{key:'created_at',label:'Created'}]} />; }

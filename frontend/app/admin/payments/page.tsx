@@ -1,2 +1,2 @@
-import { ManagementPage } from '@/features/admin-owner/components';
-export default function Page() { return <ManagementPage kind="payments" title="Payment Monitoring" />; }
+import { IntegratedResourcePage } from '@/shared/components/integrated-resource-page';
+export default function Page() { return <IntegratedResourcePage title="Payment Management" description="Payment list endpoint is not present; detail API remains available." queryKey="admin-payments" currentRole="admin" allowedRoles={['admin','owner']} todoEndpoint="TODO readonly: GET /v1/payments list endpoint unavailable; use GET /v1/payments/{payment} from detail flows." columns={[{key:'id',label:'Payment'},{key:'status',label:'Status'},{key:'amount',label:'Amount'}]} />; }

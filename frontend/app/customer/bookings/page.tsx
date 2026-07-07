@@ -1,11 +1,2 @@
-import { BookingCard, ConfirmationDialogPreview, CustomerTimeline } from '@/features/customer-portal/components';
-import { bookingCards, timelineItems } from '@/features/customer-portal/data';
-import { PageHeader, SectionHeader, AppCard, DataTable } from '@/shared/ui/components';
-
-export default function CustomerBookingsPage() {
-  return <div className="space-y-6"><PageHeader title="My Bookings" description="Active booking, detail, passenger, seat, invoice, cancel flow, timeline, and booking history." />
-    <div className="grid gap-4 lg:grid-cols-3">{bookingCards.map((card) => <BookingCard key={card.id} card={card} />)}</div>
-    <div className="grid gap-4 xl:grid-cols-2"><CustomerTimeline items={timelineItems} /><ConfirmationDialogPreview /></div>
-    <AppCard><SectionHeader title="Booking History" description="Read from existing customer booking endpoint." /><div className="mt-4"><DataTable columns={['Booking', 'Route', 'Status', 'Invoice']} rows={bookingCards.map((card) => [card.id, card.title, card.status, 'Available'])} /></div></AppCard>
-  </div>;
-}
+import { IntegratedResourcePage } from '@/shared/components/integrated-resource-page';
+export default function Page() { return <IntegratedResourcePage title="My Bookings" description="Customer booking list from the existing Booking API." endpoint="/customer/bookings" queryKey="customer-bookings" currentRole="customer" allowedRoles={['customer','owner']} realtimeTopic="booking events" columns={[{key:'id',label:'Booking'},{key:'status',label:'Status'},{key:'total_amount',label:'Total'},{key:'created_at',label:'Created'}]} />; }

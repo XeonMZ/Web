@@ -1,6 +1,2 @@
-import { AppCard, DataTable, PageHeader, SectionHeader } from '@/shared/ui/components';
-
-export default function ProfilePage() {
-  const rows = [['Avatar', 'Upload / replace'], ['Email', 'Verify and update'], ['Phone', 'OTP-ready field'], ['Password', 'Change password endpoint'], ['Emergency Contact', 'Name and phone'], ['Address', 'Customer address book'], ['Device Session', 'Active Sanctum sessions'], ['Notification Preference', 'Channel preferences']];
-  return <div className="space-y-6"><PageHeader title="Profile" description="Customer profile settings through existing auth profile endpoints." /><AppCard><SectionHeader title="Edit Profile" /><div className="mt-4"><DataTable columns={['Section', 'Capability']} rows={rows} /></div></AppCard></div>;
-}
+import { IntegratedResourcePage } from '@/shared/components/integrated-resource-page';
+export default function Page() { return <IntegratedResourcePage title="Profile" description="Authenticated customer profile from the existing Auth API." endpoint="/profile" queryKey="customer-profile" currentRole="customer" allowedRoles={['customer','owner']} columns={[{key:'id',label:'User'},{key:'name',label:'Name'},{key:'email',label:'Email'},{key:'role',label:'Role'}]} />; }

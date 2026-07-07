@@ -1,17 +1,2 @@
-import { AppCard, DataTable, PageHeader, StatsCard } from '@/shared/ui/components';
-
-export default function Page() {
-  return (
-    <div className="space-y-6">
-      <PageHeader title="Driver Dashboard" description="Driver workspace using the shared STMS UI foundation." />
-      <div className="grid gap-4 md:grid-cols-3">
-        <StatsCard label="Active" value="--" helper="Connected to existing flows" />
-        <StatsCard label="Pending" value="--" helper="Ready for Sprint integration" />
-        <StatsCard label="Alerts" value="--" helper="Realtime UI enabled" />
-      </div>
-      <AppCard>
-        <DataTable columns={['Area', 'Status']} rows={[['Shared layout', 'Active'], ['Role navigation', 'Configured'], ['Business logic', 'Unchanged']]} />
-      </AppCard>
-    </div>
-  );
-}
+import { IntegratedResourcePage } from '@/shared/components/integrated-resource-page';
+export default function Page() { return <IntegratedResourcePage title="Driver Dashboard" description="Driver dashboard from existing Driver API." endpoint="/v1/driver/dashboard" queryKey="driver-dashboard" currentRole="driver" allowedRoles={['driver','owner']} realtimeTopic="driver events" columns={[{key:'driver_id',label:'Driver'},{key:'shift_status',label:'Status'},{key:'active_trip_id',label:'Active Trip'}]} />; }

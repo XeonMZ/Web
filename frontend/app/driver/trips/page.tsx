@@ -1,2 +1,2 @@
-import { DriverMap, EarningsSummary, TodayTrips, TripTimeline } from '@/components/driver/cards';
-export default function Page() { return <main className="mx-auto max-w-6xl space-y-6 p-6"><h1 className="text-3xl font-bold">Driver Trips</h1><TodayTrips/><TripTimeline/><EarningsSummary/><DriverMap/></main>; }
+import { IntegratedResourcePage } from '@/shared/components/integrated-resource-page';
+export default function Page() { return <IntegratedResourcePage title="Driver Trips" description="Assigned trips from existing Driver API." endpoint="/v1/driver/trips" queryKey="driver-trips" currentRole="driver" allowedRoles={['driver','owner']} realtimeTopic="trip events" columns={[{key:'id',label:'Trip'},{key:'status',label:'Status'},{key:'schedule_id',label:'Schedule'}]} />; }
