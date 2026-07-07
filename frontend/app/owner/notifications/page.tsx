@@ -1,2 +1,3 @@
-import { ManagementPage } from '@/features/admin-owner/components';
-export default function Page() { return <ManagementPage kind="notifications" title="Owner Notification Center" />; }
+import { NotificationCenter } from '@/features/notification-center';
+
+export default function NotificationsPage() { return <NotificationCenter role="owner" />; }

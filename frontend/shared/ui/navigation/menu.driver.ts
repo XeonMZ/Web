@@ -1,4 +1,4 @@
-import { Banknote, Clock3, Gauge, History, LayoutDashboard, MapPinned, Route, UserCheck } from 'lucide-react';
+import { Banknote, Bell, Clock3, Gauge, History, LayoutDashboard, MapPinned, Route, UserCheck } from 'lucide-react';
 import type { MenuItem } from './types';
 
 export const driverMenu: MenuItem[] = [
@@ -10,4 +10,5 @@ export const driverMenu: MenuItem[] = [
   { label: 'GPS', href: '/customer/tracking', icon: MapPinned },
   { label: 'History', href: '/driver/history', icon: History },
   { label: 'Earnings', href: '/driver/earnings', icon: Banknote },
+  { label: 'Notifications', href: '/driver/notifications', icon: Bell },
 ];
