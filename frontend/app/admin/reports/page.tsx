@@ -1,2 +1,2 @@
-import { ReportsPage } from '@/features/admin-owner/components';
-export default function Page() { return <ReportsPage scope="admin" />; }
+import { IntegratedResourcePage } from '@/shared/components/integrated-resource-page';
+export default function Page() { return <IntegratedResourcePage title="Admin Reports" description="Readonly TODO integration shell because no existing backend list endpoint is available for this admin screen." queryKey="admin-reports" currentRole="admin" allowedRoles={['admin','owner']} todoEndpoint="TODO readonly: GET /admin/reports is unavailable." />; }

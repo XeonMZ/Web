@@ -1,2 +1,2 @@
-import { ManagementPage } from '@/features/admin-owner/components';
-export default function Page() { return <ManagementPage kind="settings" title="System Settings" />; }
+import { IntegratedResourcePage } from '@/shared/components/integrated-resource-page';
+export default function Page() { return <IntegratedResourcePage title="Admin Settings" description="Readonly TODO integration shell because no existing backend list endpoint is available for this admin screen." queryKey="admin-settings" currentRole="admin" allowedRoles={['admin','owner']} todoEndpoint="TODO readonly: GET /admin/settings is unavailable." />; }

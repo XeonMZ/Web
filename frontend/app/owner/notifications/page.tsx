@@ -1,3 +1,2 @@
-import { NotificationCenter } from '@/features/notification-center';
-
-export default function NotificationsPage() { return <NotificationCenter role="owner" />; }
+import { IntegratedResourcePage } from '@/shared/components/integrated-resource-page';
+export default function Page() { return <IntegratedResourcePage title="Owner Notifications" description="Owner-only readonly integration using existing APIs where available; no endpoint is created when absent." queryKey="owner-notifications" currentRole="owner" allowedRoles={['owner']} todoEndpoint="TODO readonly: GET /owner/notifications summary endpoint is unavailable." />; }

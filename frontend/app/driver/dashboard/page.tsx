@@ -1,2 +1,1 @@
-import { CurrentShiftCard, DriverMap, DriverStatusCard, EarningsSummary, GpsIndicator, ShiftTimer, TodayTrips, TripSummary } from '@/components/driver/cards';
-export default function DriverDashboardPage() { return <main className="mx-auto max-w-6xl space-y-6 p-6"><h1 className="text-3xl font-bold">Driver Dashboard</h1><div className="grid gap-4 md:grid-cols-3"><DriverStatusCard status="available"/><CurrentShiftCard/><GpsIndicator/></div><DriverMap/><div className="grid gap-4 md:grid-cols-3"><TodayTrips/><ShiftTimer/><TripSummary/></div><EarningsSummary/></main>; }
+export { default } from '../page';
