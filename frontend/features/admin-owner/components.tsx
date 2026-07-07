@@ -31,3 +31,22 @@ export function DashboardPage({ scope }: { scope: 'admin' | 'owner' }) {
 export function ReportsPage({ scope }: { scope: 'admin' | 'owner' }) { return <div className="space-y-6"><PageHeader title={`${scope === 'admin' ? 'Admin' : 'Owner'} Reports`} description="Report preview with date, route, driver, and vehicle filters." /><FilterBar>{reportFilters.map((f) => <Badge key={f}>{f}</Badge>)}</FilterBar><div className="grid gap-4 md:grid-cols-2">{reports.map((r) => <ReportCard key={r} name={r} />)}</div><ExportDialog /></div>; }
 export function ManagementPage({ kind, title }: { kind: keyof typeof management; title: string }) { const items = management[kind]; return <div className="space-y-6"><PageHeader title={title} description="Uses existing endpoints where available; unavailable backend capabilities stay readonly/TODO." /><FilterBar><SearchBar placeholder={`Search ${title}`} />{items.slice(1,4).map((i) => <Badge key={i}>{i}</Badge>)}</FilterBar><DataTable columns={['Feature','Status','Integration']} rows={items.map((i) => [i, <StatusBadge key={i} status={i.includes('Failed') ? 'Failed preview' : 'Active preview'} />, i.includes('Generate Ticket') ? 'GET /v1/tickets + QR' : 'Existing/TODO typed interface'])} /><RecentActivityCard /><Pagination /></div>; }
 export function EndpointPanel() { return <AppCard><SectionHeader title="Endpoint Existing yang digunakan" description="No new endpoint is introduced by Sprint 6C." /><div className="mt-4 grid gap-2 md:grid-cols-2">{existingAdminOwnerEndpoints.map((e) => <code key={e} className="rounded-xl bg-slate-100 px-3 py-2 text-xs dark:bg-slate-800">{e}</code>)}</div><SectionHeader title="Typed TODO interfaces" description="Readonly placeholders when backend is unavailable." /><div className="mt-4 grid gap-2 md:grid-cols-2">{plannedReadOnlyInterfaces.map((e) => <code key={e} className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-800">{e}</code>)}</div></AppCard>; }
+
+
+const ownerSettingsSections = ['Company','Localization','Booking','Payment','Ticket','Realtime','Notification','Membership','Promo','Feature Flags','Backup','Health Check','Demo Data'];
+const readinessRows = [
+  ['Health Check', 'GET /api/owner/production-readiness/health', 'Healthy / Warning / Failed'],
+  ['Demo Data', 'GET + DELETE /api/owner/production-readiness/demo-data', 'Owner confirmation + audit log'],
+  ['Export', 'GET /api/owner/production-readiness/configuration/export', 'Existing SystemSetting + FeatureFlag only'],
+  ['Import', 'POST /api/owner/production-readiness/configuration/import', 'Validated configuration payload'],
+  ['Backup', 'POST /api/owner/production-readiness/configuration/backup', 'Filesystem backup of settings'],
+  ['Restore', 'POST /api/owner/production-readiness/configuration/restore', 'Restore from backup path'],
+];
+
+export function OwnerSettingsPage() {
+  return <div className="space-y-6"><PageHeader title="Owner Settings" description="Extends the existing owner settings area for Sprint 7B production readiness without redesigning booking, payment, ticket, driver, GPS, notification, or realtime engines." />
+    <AppCard><SectionHeader title="Settings Sections" description="All values persist through existing SystemSetting and FeatureFlag infrastructure." /><div className="mt-4 flex flex-wrap gap-2">{ownerSettingsSections.map((section) => <Badge key={section} tone={section.includes('Health') ? 'success' : section.includes('Demo') ? 'warning' : 'neutral'}>{section}</Badge>)}</div></AppCard>
+    <AppCard><SectionHeader title="Production Readiness Tools" description="Owner-only endpoints for checks, demo data cleanup, and configuration backup/restore." /><DataTable columns={['Tool','Endpoint','Protection']} rows={readinessRows} /></AppCard>
+    <ConfirmationDialog />
+  </div>;
+}

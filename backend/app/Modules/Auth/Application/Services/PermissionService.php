@@ -17,7 +17,7 @@ final class PermissionService
     {
         $permissions = config('permission.permissions.'.$user->role, []);
         foreach ($permissions as $allowed) {
-            if ($allowed === $permission || str_ends_with($allowed, ':*') && str_starts_with($permission, substr($allowed, 0, -1))) {
+            if ($allowed === '*' || $allowed === $permission || str_ends_with($allowed, ':*') && str_starts_with($permission, substr($allowed, 0, -1))) {
                 return true;
             }
         }
