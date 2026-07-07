@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::channel('customer.{bookingId}', fn ($user, string $bookingId): bool => (bool) $user);
-Broadcast::channel('driver.{driverId}', fn ($user, string $driverId): bool => (bool) $user);
-Broadcast::channel('admin', fn ($user): bool => (bool) $user);
-Broadcast::channel('owner', fn ($user): bool => (bool) $user);
+Broadcast::channel('user.{userId}', fn (User $user, string $userId): bool => (string) $user->getKey() === $userId);
+Broadcast::channel('notification.{userId}', fn (User $user, string $userId): bool => (string) $user->getKey() === $userId);
+
+Broadcast::channel('admin', fn (User $user): bool => in_array($user->role, ['admin', 'owner'], true));
+Broadcast::channel('owner', fn (User $user): bool => $user->role === 'owner');
+Broadcast::channel('system', fn (User $user): bool => $user->role === 'owner');
