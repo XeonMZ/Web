@@ -7,6 +7,11 @@ Route::get('health', [HealthController::class, 'health']);
 Route::get('ready', [HealthController::class, 'ready']);
 Route::get('version', [HealthController::class, 'version']);
 
+Route::prefix('installer')->group(function (): void {
+    Route::get('status', [\App\Http\Controllers\InstallerController::class, 'status']);
+    Route::post('install', [\App\Http\Controllers\InstallerController::class, 'store'])->middleware('throttle:6,1');
+});
+
 Route::post('login', [\App\Modules\Auth\Presentation\AuthController::class, 'login'])->middleware('throttle:login');
 Route::post('register', [\App\Modules\Auth\Presentation\AuthController::class, 'register'])->middleware('throttle:register');
 Route::post('forgot-password', [\App\Modules\Auth\Presentation\AuthController::class, 'forgotPassword'])->middleware('throttle:password-reset');
