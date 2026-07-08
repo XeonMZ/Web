@@ -18,6 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {})
+    ->withExceptions(function (Exceptions $exceptions) {
+    $exceptions->shouldRenderJsonWhen(fn () => true);
+})
     ->withProviders([App\Providers\AppServiceProvider::class, App\Providers\RepositoryServiceProvider::class, App\Providers\EventServiceProvider::class])
     ->create();
